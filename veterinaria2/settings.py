@@ -149,16 +149,6 @@ MEDIA_URL = "/media/"
 #media para produccion
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
-#Configuracion para el envio de email por medio de GMAIL
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = '587'
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'eichhorn.gustavof@gmail.com'
-# Clave generada desde la configuracion de Google
-EMAIL_HOST_PASSWORD = 'Dmqo1095%i'
-RECIPIENT_ADDRESS = 'test@email.com'
-
 #Modelo User
 #AUTH_USER_MODEL = 'administracion.Usuario'
 
