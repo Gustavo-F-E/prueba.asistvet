@@ -76,17 +76,17 @@ WSGI_APPLICATION = 'veterinaria2.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'sqlite': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     },
-    'posgres': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': "DATABASE_NAME",
-        'USER': "DATABASE_USER",
-        'PASSWORD': "DATABASE_PASSWORD",
-        'HOST': "DATABASE_HOST",
-        'PORT': "DATABASE_PORT",
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': "default",
+        'USER': "pruebaasistvet",
+        'PASSWORD': "django123",
+        'HOST': "pruebaasistvet.mysql.pythonanywhere-services.com",
+        'PORT': "3306",
     }
 }
 
