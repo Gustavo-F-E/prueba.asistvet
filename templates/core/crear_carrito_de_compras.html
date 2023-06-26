@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Crear Carrito de Compras</h1>
+  <p>Nombre de usuario: {{ nombre_usuario }}</p>
+  <form id="carritoForm" method="POST">
+    {% csrf_token %}
+    {% for producto in productos %}
+      <div>
+        <label>{{ producto.marca }} - {{ producto.descripcion }}</label>
+        <button type="button" class="btn btn-sm btn-secondary" onclick="sumarUnidad({{ producto.id_producto }})">+</button>
+        <span id="cantidadLabel_{{ producto.id_producto }}">0</span>
+        <button type="button" class="btn btn-sm btn-secondary" onclick="restarUnidad({{ producto.id_producto }})">-</button>
+        <input type="hidden" name="cantidades" id="cantidad_{{ producto.id_producto }}" value="0">
+      </div>
+    {% endfor %}
+    <button type="submit">Agregar al carrito</button>
+  </form>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    function sumarUnidad(productoId) {
+      var inputCantidad = document.querySelector('#cantidad_' + productoId);
+      var cantidadLabel = document.querySelector('#cantidadLabel_' + productoId);
+      inputCantidad.value = parseInt(inputCantidad.value) + 1;
+      cantidadLabel.innerText = inputCantidad.value;
+    }
+
+    function restarUnidad(productoId) {
+      var inputCantidad = document.querySelector('#cantidad_' + productoId);
+      var cantidad = parseInt(inputCantidad.value);
+      if (cantidad > 0) {
+        inputCantidad.value = cantidad - 1;
+        cantidadLabel.innerText = inputCantidad.value;
+      }
+    }
+
+    $(document).ready(function() {
+      $('#carritoForm').submit(function(event) {
+        event.preventDefault();
+
+        var formData = new FormData(this);
+
+        $.ajax({
+          url: '{% url "crear_carrito_de_compras" %}',
+          type: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function(response) {
+            // Manejar la respuesta del servidor si es necesario
+            console.log(response);
+          },
+          error: function(error) {
+            // Manejar el error si ocurriera
+            console.log(error);
+          }
+        });
+      });
+    });
+  </script>
+{% endblock %}
+
+{% comment "" %}
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Crear Carrito de Compras</h1>
+  <p>Nombre de usuario: {{ nombre_usuario }}</p>
+  <form id="carritoForm" method="POST">
+    {% csrf_token %}
+    {% for producto in productos %}
+      <div>
+        <input type="checkbox" name="productos" value="{{ producto.id_producto }}">
+        <label>{{ producto.marca }} - {{ producto.descripcion }}</label>
+        <button type="button" class="btn btn-sm btn-secondary" onclick="sumarUnidad({{ producto.id_producto }})">+</button>
+        <span id="cantidadLabel_{{ producto.id_producto }}">0</span>
+        <button type="button" class="btn btn-sm btn-secondary" onclick="restarUnidad({{ producto.id_producto }})">-</button>
+        <input type="hidden" name="cantidades" id="cantidad_{{ producto.id_producto }}" value="0">
+      </div>
+    {% endfor %}
+    <button type="submit">Agregar al carrito</button>
+  </form>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    function sumarUnidad(productoId) {
+      var inputCantidad = document.querySelector('#cantidad_' + productoId);
+      var cantidadLabel = document.querySelector('#cantidadLabel_' + productoId);
+      inputCantidad.value = parseInt(inputCantidad.value) + 1;
+      cantidadLabel.innerText = inputCantidad.value;
+    }
+
+    function restarUnidad(productoId) {
+      var inputCantidad = document.querySelector('#cantidad_' + productoId);
+      var cantidad = parseInt(inputCantidad.value);
+      if (cantidad > 0) {
+        inputCantidad.value = cantidad - 1;
+        cantidadLabel.innerText = inputCantidad.value;
+      }
+    }
+
+    $(document).ready(function() {
+      $('#carritoForm').submit(function(event) {
+        event.preventDefault();
+
+        var formData = new FormData(this);
+
+        $.ajax({
+          url: '{% url "crear_carrito_de_compras" %}',
+          type: 'POST',
+          data: formData,
+          processData: false,
+          contentType: false,
+          success: function(response) {
+            // Manejar la respuesta del servidor si es necesario
+            console.log(response);
+          },
+          error: function(error) {
+            // Manejar el error si ocurriera
+            console.log(error);
+          }
+        });
+      });
+    });
+  </script>
+{% endblock %}
+{% endcomment %}

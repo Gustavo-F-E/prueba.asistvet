@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Veterinaria Asist Vet: Ver Productos{% endblock titulo %}
+
+{% block css %} {% load static %}<link rel="stylesheet" href="{% static '/core/css/registrarse.css' %}" />
+<style>
+    .empty_header1{
+        height:10rem;
+    }
+
+    .empty_footer1{
+        height:50vh;
+    }
+
+    .container{
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-items:center;
+    }
+
+
+</style>
+{% endblock css %}
+
+{% block content %}
+
+
+<div class="empty_header1"></div>
+
+    <div class="container">
+
+        {% for product in products  %}
+
+        <div class="productContainer">
+            <div class="thumbnail">
+                <img src="{{product.picture.url}}" alt="">
+            </div>
+
+            <div class="action">
+
+                <p>{{product.name}}</p>
+
+                <p>${{product.price}}</p>
+    
+                <button value="{{product.id}}">Add to Cart</button>
+
+            </div>
+           
+
+        </div> 
+        
+        {% endfor %}
+
+        <a href="{% url 'cart' %}" style="color:black;text-decoration:none">
+                    <div class="cartitems"><p id="num_of_items">Ir al carrito de compras: {{cart.num_of_items}} ítems</p></div>
+                    
+        </a>
+
+       
+
+
+
+
+      
+
+       
+
+
+
+
+    </div>
+
+
+<div class="empty_footer1"></div>
+{% endblock content %}
+
+{% block javascript %}
+        <script src="{% static '/core/javascript/hamburguer_menu.js' %}"></script>
+        <script src="{% static '/core/javascript/sumar_restar.js' %}"></script>
+
+<script src="https://checkout.flutterwave.com/v3.js"></script>
+<script>
+
+let cart_total = "{{cart.total_price}}"
+let cart_id = "{{cart.id}}"
+
+
+  function makePayment() {
+    FlutterwaveCheckout({
+      public_key: "FLWPUBK_TEST-PUBLIC KEY",
+      tx_ref: "titanic-48981487343MDI0NzMx",
+      amount: cart_total,
+      currency: "USD",
+      payment_options: "card, mobilemoneyghana, ussd",
+      redirect_url: "http://127.0.0.1:8000/confirm_payment/"+cart_id,
+      meta: {
+        consumer_id: 23,
+        consumer_mac: "92a3-912ba-1192a",
+      },
+      customer: {
+        email: "rose@unsinkableship.com",
+        phone_number: "08102909304",
+        name: "{{request.user.username}}",
+      },
+      customizations: {
+        title: "My Shop",
+        description: "Buy with ease",
+        logo: "https://www.logolynx.com/images/logolynx/22/2239ca38f5505fbfce7e55bbc0604386.jpeg",
+      },
+    });
+  }
+
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+
+
+
+
+
+
+let btns = document.querySelectorAll(".productContainer button")
+
+btns.forEach(btn=>{
+    btn.addEventListener("click", addToCart)
+})
+
+function addToCart(e){
+    let product_id = e.target.value
+    let url = "/add_to_cart"
+
+    let data = {id:product_id}
+
+    fetch(url, {
+        method: "POST",
+        headers: {"Content-Type":"application/json", 'X-CSRFToken': csrftoken},
+        body: JSON.stringify(data)
+    })
+    .then(res=>res.json())
+    .then(data=>{
+        document.getElementById("num_of_items").innerHTML = data
+        console.log(data)
+    })
+    .catch(error=>{
+        console.log(error)
+    })
+}
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+
+
+{% endblock javascript %}
